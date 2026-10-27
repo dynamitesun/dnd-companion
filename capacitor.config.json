@@ -1,0 +1,8 @@
+{
+  "appId": "com.dynamitesun.dndcompanion",
+  "appName": "Solo DM",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": false
+  }
+}

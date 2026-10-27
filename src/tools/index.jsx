@@ -1,3 +1,4 @@
+import SyncChat from './SyncChat.jsx';
 import Adventure from './Adventure.jsx';
 import Initiative from './Initiative.jsx';
 import Spells from './Spells.jsx';
@@ -16,6 +17,7 @@ import Homebrew from './Homebrew.jsx';
 import Backup from './Backup.jsx';
 
 export const TOOLS = [
+  { id: 'sync', name: 'Sync from Chat', icon: '🔄', Component: SyncChat },
   { id: 'adventure', name: 'Adventure Book', icon: '📕', Component: Adventure },
   { id: 'initiative', name: 'Initiative', icon: '⚔️', Component: Initiative },
   { id: 'spells', name: 'Spells', icon: '✨', Component: Spells },

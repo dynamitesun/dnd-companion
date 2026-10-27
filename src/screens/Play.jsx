@@ -94,15 +94,30 @@ export default function Play({ openTool }) {
           <div className="entry center" style={{ marginTop: 30 }}>
             <h2>{campaign.name}</h2>
             <p className="muted">{campaign.setting}</p>
-            <p className="small muted">
+            {campaign.lastSync && (
+              <div className="card" style={{ textAlign: 'left' }}>
+                <div className="tiny muted">📍 {campaign.location || 'Unknown location'} · Day {campaign.calendar.day} · synced {new Date(campaign.lastSync).toLocaleString()}</div>
+                {campaign.summary && <div style={{ marginTop: 6 }}><Prose text={campaign.summary} /></div>}
+                {campaign.journal.quests.filter((q) => q.status === 'active').length > 0 && (
+                  <div className="small" style={{ marginTop: 6 }}><b>Quests:</b> {campaign.journal.quests.filter((q) => q.status === 'active').map((q) => q.title).join(' · ')}</div>
+                )}
+              </div>
+            )}
+            {settings.apiKey && <p className="small muted">
               Party: {campaign.party.map((p) => p.name).join(', ')}.{' '}
               {campaign.party.length < 4 && 'Add up to three companions on the Party tab. '}
               {!campaign.moduleId && 'Load an adventure PDF in Tools → Adventure Book to have the DM follow it.'}
-            </p>
-            <button className="btn primary" disabled={busy || !settings.apiKey} onClick={() => send('Begin the adventure.')}>
-              🕯️ Begin the adventure
-            </button>
-            {!settings.apiKey && <p className="small" style={{ color: 'var(--warn)' }}>Add your API key in Settings ⚙️ first.</p>}
+            </p>}
+            {settings.apiKey ? (
+              <button className="btn primary" disabled={busy} onClick={() => send('Begin the adventure.')}>
+                🕯️ Begin the adventure
+              </button>
+            ) : (
+              <>
+                <button className="btn primary" onClick={() => openTool('sync')}>🔄 Sync from your Solo Table chat</button>
+                <p className="small muted">Playing with Claude in a chat? Sync it here to see your party, combat and journal on the go. (The built-in AI DM needs an API key in Settings — optional.)</p>
+              </>
+            )}
           </div>
         )}
         {campaign.log.map((e) => <Entry key={e.id || e.ts + e.text} e={e} />)}
@@ -118,7 +133,7 @@ export default function Play({ openTool }) {
         )}
       </div>
 
-      <div className="composer">
+      {(settings.apiKey || started) && <div className="composer">
         {campaign.pendingRoll && !busy && (
           <div className="rollreq">
             <div className="row between">
@@ -163,7 +178,7 @@ export default function Play({ openTool }) {
           />
           <button className="btn primary" disabled={busy || !text.trim() || !settings.apiKey} onClick={() => send()}>Send</button>
         </div>
-      </div>
+      </div>}
     </div>
   );
 }
